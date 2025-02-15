@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { Prisma, User } from '@prisma/client';
 import { PrismaService } from './prisma/prisma.service';
 import { Caching } from './caching/caching';
@@ -6,6 +6,7 @@ import { Caching } from './caching/caching';
 @Injectable()
 export class AppService {
   cache: Caching;
+  private readonly logger = new Logger(AppService.name);
   constructor(private readonly prisma: PrismaService) {
     this.cache = new Caching();
   }
@@ -16,33 +17,34 @@ export class AppService {
     });
 
     this.cache.set(user.id, user);
+    this.logger.debug('Added cache for user with id: ' + user.id);
     return this.cache.get(user.id);
   }
 
-  async findOne(id: number): Promise<User> {
-    if (this.cache.get(id)) {
-      return this.cache.get(id);
-    }
-
-    return this.prisma.user.findFirstOrThrow({
+  async findOne(id: number): Promise<{ user: User; dataFromCache: boolean }> {
+    const dataFromCache = !!this.cache.get(id);
+    const user = await this.prisma.user.findFirstOrThrow({
       where: { id },
     });
+    this.cache.set(user.id, user);
+
+    return {
+      user,
+      dataFromCache,
+    };
   }
 
-  async getAll(): Promise<User[] | []> {
-    if (this.cache.map.size > 0) {
-      return Array.from(this.cache.map.values());
-    }
-
+  async getAll(): Promise<{ users: User[]; dataFromCache: boolean }> {
+    const dataFromCache = this.cache.map.size > 0;
     const users = await this.prisma.user.findMany();
-    // add users to cache if missing
     if (users.length) {
       for (const user of users) {
+        this.logger.debug('Added cache for user missing users');
         this.cache.set(user.id, user);
       }
     }
 
-    return Array.from(this.cache.map.values());
+    return { users: Array.from(this.cache.map.values()), dataFromCache };
   }
 
   async update(id: number, data: Prisma.UserUpdateInput): Promise<User> {
@@ -52,12 +54,14 @@ export class AppService {
     });
 
     this.cache.set(id, user);
+    this.logger.debug('Updated cache for user with id: ' + user.id);
     return this.cache.get(user.id);
   }
 
   async delete(id: number): Promise<User> {
     if (this.cache.get(id)) {
       this.cache.map.delete(id);
+      this.logger.debug('Delete cache for user with id: ' + id);
     }
 
     return this.prisma.user.delete({
