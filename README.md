@@ -31,4 +31,6 @@ since accessing data from memory is much faster than reading from disk-based sto
 ![Cache-Aside](Cache-Aside.png)
 Figure 2.0
    
-# Project nstallation instructions
+# Project installation instructions
+
+//TODO swagger, npm i, prisma, run project, how to use

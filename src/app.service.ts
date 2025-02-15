@@ -34,7 +34,15 @@ export class AppService {
       return Array.from(this.cache.map.values());
     }
 
-    return this.prisma.user.findMany();
+    const users = await this.prisma.user.findMany();
+    // add users to cache if missing
+    if (users.length) {
+      for (const user of users) {
+        this.cache.set(user.id, user);
+      }
+    }
+
+    return Array.from(this.cache.map.values());
   }
 
   async update(id: number, data: Prisma.UserUpdateInput): Promise<User> {
