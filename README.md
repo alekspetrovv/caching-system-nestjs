@@ -33,4 +33,28 @@ Figure 2.0
    
 # Project installation instructions
 
-//TODO swagger, npm i, prisma, run project, how to use
+1. Clone the project: `git clone git@github.com:alekspetrovv/caching-system-nestjs.git`
+2. Install [Postgresql](https://www.postgresql.org/download/) locally
+3. Install project dependencies: `npm i`
+4. Migrate database: `npx prisma migrate dev --schema src/prisma/schema.prisma`
+5. Generate database types: `npx prisma generate --schema src/prisma/schema.prisma`
+6. Run project: `npm run start:prod`
+
+# Swagger Documentation
+
+Swagger documentation will be available with the user endpoints to test the caching when api is started:
+`localhost:3000/docs`:
+
+![Swagger](Swagger.png)
+
+The caching will be indicated in the get user/users endpoint with the following response example in the request: 
+
+![Swagger](Example.png)
+
+Furthermore, the application contains logs to indicate if the cache is successfully made or not:
+
+![Swagger](Logs.png)
+
+
+
+

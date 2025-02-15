@@ -39,9 +39,9 @@ export class AppService {
     const users = await this.prisma.user.findMany();
     if (users.length) {
       for (const user of users) {
-        this.logger.debug('Added cache for user missing users');
         this.cache.set(user.id, user);
       }
+      this.logger.debug('Added cache for user missing users');
     }
 
     return { users: Array.from(this.cache.map.values()), dataFromCache };
