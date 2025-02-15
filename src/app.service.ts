@@ -23,10 +23,16 @@ export class AppService {
 
   async findOne(id: number): Promise<{ user: User; dataFromCache: boolean }> {
     const dataFromCache = !!this.cache.get(id);
-    const user = await this.prisma.user.findFirstOrThrow({
-      where: { id },
-    });
-    this.cache.set(user.id, user);
+    let user: User;
+
+    if (!dataFromCache) {
+      user = await this.prisma.user.findFirstOrThrow({
+        where: { id },
+      });
+      this.cache.set(user.id, user);
+    } else {
+      user = this.cache.get(id);
+    }
 
     return {
       user,
@@ -35,13 +41,18 @@ export class AppService {
   }
 
   async getAll(): Promise<{ users: User[]; dataFromCache: boolean }> {
-    const dataFromCache = this.cache.map.size > 0;
-    const users = await this.prisma.user.findMany();
-    if (users.length) {
-      for (const user of users) {
-        this.cache.set(user.id, user);
+    const dataFromCache =
+      this.cache.map.size > 0 &&
+      this.cache.map.size === (await this.prisma.user.count());
+
+    if (!dataFromCache) {
+      const users = await this.prisma.user.findMany();
+      if (users.length) {
+        for (let i = 0; i < users.length; i++) {
+          this.cache.set(users[i].id, users[i]);
+        }
+        this.logger.debug('Added cache for missing users');
       }
-      this.logger.debug('Added cache for user missing users');
     }
 
     return { users: Array.from(this.cache.map.values()), dataFromCache };
