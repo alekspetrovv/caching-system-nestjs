@@ -16,7 +16,7 @@ The reason for this is to keep the cache valid and in sync with the database,
 it is updated whenever the database is updated, preventing outdated or inconsistent data.
 (Figure 1.0)
 
-![Cache-Aside](Write-Through.png)
+![Write-Through](Write-Through.png)
 Figure 1.0
 
 
