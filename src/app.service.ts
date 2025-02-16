@@ -22,21 +22,21 @@ export class AppService {
   }
 
   async findOne(id: number): Promise<{ user: User; dataFromCache: boolean }> {
-    const dataFromCache = !!this.cache.get(id);
-    let user: User;
-
-    if (!dataFromCache) {
-      user = await this.prisma.user.findFirstOrThrow({
-        where: { id },
-      });
-      this.cache.set(user.id, user);
-    } else {
-      user = this.cache.get(id);
+    if (this.cache.get(id)) {
+      return {
+        user: this.cache.get(id),
+        dataFromCache: true,
+      };
     }
 
+    const userFromDB = await this.prisma.user.findFirstOrThrow({
+      where: { id },
+    });
+    this.cache.set(id, userFromDB);
+
     return {
-      user,
-      dataFromCache,
+      user: userFromDB,
+      dataFromCache: false,
     };
   }
 
