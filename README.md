@@ -14,10 +14,13 @@ When a client makes a request to create or update a record through the API,
 the new or updated data is stored in both the database and the cache.
 The reason for this is to keep the cache valid and in sync with the database,
 it is updated whenever the database is updated, preventing outdated or inconsistent data.
-(Figure 1.0)
+(Figure 1.0, 1.1)
 
-![Write-Through](Write-Through.png)
 Figure 1.0
+![Write-Through](Cache-Write-Through.png)
+
+Figure 1.1
+![Write-Through-2](Cache-Write-Through-2.png)
 
 
 The second caching use case is Cache-Aside.
@@ -26,10 +29,10 @@ If the data is available, it is returned immediately; if not,
 the system retrieves it from the database and stores it in the cache for future requests.
 This approach significantly improves the performance of read operations
 since accessing data from memory is much faster than reading from disk-based storage.
-(Figure 2.0)
+(Figure 2.0, 2.1)
 
-![Cache-Aside](Cache-Aside.png)
 Figure 2.0
+![Cache-Aside](Cache-Aside-Example.png)
    
 # Project installation instructions
 
@@ -49,7 +52,7 @@ Swagger documentation will be available with the user endpoints to test the cach
 
 The caching will be indicated in the get user/users endpoint with the following response example in the request: 
 
-![Swagger](Example.png)
+![Swagger-Responses](Example.png)
 
 Furthermore, the application contains logs to indicate if the cache is successfully made or not:
 
