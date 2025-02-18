@@ -29,10 +29,20 @@ If the data is available, it is returned immediately; if not,
 the system retrieves it from the database and stores it in the cache for future requests.
 This approach significantly improves the performance of read operations
 since accessing data from memory is much faster than reading from disk-based storage.
-(Figure 2.0, 2.1)
+(Figure 2.0)
 
 Figure 2.0
 ![Cache-Aside](Cache-Aside-Example.png)
+
+When the cache is full, we use a FIFO (First-In, First-Out) eviction policy.
+This means the oldest item added to the cache is removed first to make space for new items.
+(Figure 3.0)
+
+Figure 3.0
+![FIFO-CACHE](FIFO-Cache-Eviction-Policy.png)
+
+
+
    
 # Project installation instructions
 

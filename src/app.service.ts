@@ -2,13 +2,14 @@ import { Injectable, Logger } from '@nestjs/common';
 import { Prisma, User } from '@prisma/client';
 import { PrismaService } from './prisma/prisma.service';
 import { Caching } from './caching/caching';
+const cacheCapacity = 3;
 
 @Injectable()
 export class AppService {
   cache: Caching;
   private readonly logger = new Logger(AppService.name);
   constructor(private readonly prisma: PrismaService) {
-    this.cache = new Caching();
+    this.cache = new Caching(cacheCapacity);
   }
 
   async create(data: Prisma.UserCreateInput): Promise<User> {
