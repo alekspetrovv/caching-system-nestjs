@@ -11,9 +11,9 @@ while using a Map Data Structure for in-memory caching.
 
 The first caching use case is Write-Through.
 When a client makes a request to create or update a record through the API,
-the new or updated data is stored in both the database and the cache.
-The reason for this is to keep the cache valid and in sync with the database,
-it is updated whenever the database is updated, preventing outdated or inconsistent data.
+the new or updated data is stored in both the database and the cache with Time-To-Live.
+Time-to-live automatically removes stale data from the cache after a specified duration.
+The data will be stored in both cache and in database to keep data in sync.
 (Figure 1.0, 1.1)
 
 Figure 1.0
