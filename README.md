@@ -14,14 +14,10 @@ When a client makes a request to create or update a record through the API,
 the new or updated data is stored in both the database and the cache with Time-To-Live.
 Time-to-live automatically removes stale data from the cache after a specified duration.
 The data will be stored in both cache and in database to keep data in sync.
-(Figure 1.0, 1.1)
+(Figure 1.0)
 
 Figure 1.0
 ![Write-Through](Cache-Write-Through.png)
-
-Figure 1.1
-![Write-Through-2](Cache-Write-Through-2.png)
-
 
 The second caching use case is Cache-Aside.
 When a client requests a single user or multiple users, the system first checks the cache for the data.
@@ -34,11 +30,19 @@ since accessing data from memory is much faster than reading from disk-based sto
 Figure 2.0
 ![Cache-Aside](Cache-Aside-Example.png)
 
-When the cache is full, we use a FIFO (First-In, First-Out) eviction policy.
-This means the oldest item added to the cache is removed first to make space for new items.
+The cache will be cleaned to limit the amount of data stored in-memory with a cron job.
+This cron job will be checked for expired data, and if there is, it will delete cache data from in-memory.
 (Figure 3.0)
 
+
 Figure 3.0
+![Cache-Aside](TTL-Cache.png)
+
+There is also an option to use FIFO (First-In, First-Out) eviction policy when the cache is full.
+This means the oldest item added to the cache is removed first to make space for new items.
+(Figure 4.0)
+
+Figure 4.0
 ![FIFO-CACHE](FIFO-Cache-Eviction-Policy.png)
 
 
