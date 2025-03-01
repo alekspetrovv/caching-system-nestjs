@@ -113,7 +113,6 @@ export class AppService {
   checkForExpiredUserData(): void {
     const now: Date = new Date();
     for (const [key, value] of this.cache.map.entries()) {
-      console.log(key, value);
       if (value.ttl.getTime() < now.getTime()) {
         this.cache.delete(key);
       }
