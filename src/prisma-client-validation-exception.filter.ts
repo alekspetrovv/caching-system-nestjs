@@ -30,7 +30,14 @@ export class PrismaClientValidationExceptionFilter extends BaseExceptionFilter {
       message: 'Request validation failed',
     };
 
-    this.logger.log(`request method: ${request.method} request url${request.url}`, JSON.stringify(devErrorResponse));
-    response.status(statusCode).json(process.env.NODE_ENV === 'dev' ? devErrorResponse : prodErrorResponse);
+    this.logger.log(
+      `request method: ${request.method} request url${request.url}`,
+      JSON.stringify(devErrorResponse),
+    );
+    response
+      .status(statusCode)
+      .json(
+        process.env.NODE_ENV === 'dev' ? devErrorResponse : prodErrorResponse,
+      );
   }
 }
