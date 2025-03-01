@@ -1,6 +1,6 @@
 import { User } from '@prisma/client';
 
-export class Caching {
+export class FifoCaching {
   map: Map<number, User>;
   capacity: number;
   constructor(capacity: number) {

@@ -5,8 +5,9 @@ import { PrismaService } from './prisma/prisma.service';
 import { APP_FILTER } from '@nestjs/core';
 import { PrismaClientExceptionFilter } from './prisma-client-exception.filter';
 import { PrismaClientValidationExceptionFilter } from './prisma-client-validation-exception.filter';
+import { ScheduleModule } from '@nestjs/schedule';
 @Module({
-  imports: [],
+  imports: [ScheduleModule.forRoot()],
   controllers: [AppController],
   providers: [
     AppService,
